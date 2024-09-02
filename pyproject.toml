@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "mlb-graphical-standings"
+version = "0.1.0"
+description = "Emails grpahical standings to me every monday morning."
+authors = ["Jordan Porter"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+pytest = "^8.3.2"
+pybaseball = "^2.2.7"
+tqdm = "^4.66.5"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
