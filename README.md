@@ -26,9 +26,15 @@ Roadmap
 
 O setup basic grpahical standings
 
+O fix clashing colors
+
+O would be really cool if we had chatgpt generate humorous captions
+
 O add pngs of team logos
 
 O test coverage
 
 O docker 
+
+O get logging setup once we have docker in place
 
