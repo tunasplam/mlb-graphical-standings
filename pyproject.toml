@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "mlb_graphical_standings"
 version = "1.0.0"
-description = "Emails grpahical standings to me every monday morning."
+description = "Emails grpahical standings to me every Monday morning."
 authors = ["Jordan Porter"]
 license = "MIT"
 readme = "README.md"
@@ -15,7 +15,7 @@ chuy = "^1.4.0"
 pylint = "^3.2.7"
 
 [tool.chuy]
-build = "poetry build && poetry run pip install dist/mlb_graphical_standings-1.0.0-py3-none-any.whl --force-reinstall"
+build = "poetry build && && echo 'installing...' && poetry run pip install -q dist/mlb_graphical_standings-1.0.0-py3-none-any.whl --force-reinstall"
 test = "poetry run pytest -s"
 
 [build-system]

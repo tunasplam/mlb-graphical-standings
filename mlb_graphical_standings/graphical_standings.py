@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 import pybaseball as pb
 from tqdm import tqdm
 
-from utils import get_soup
+from .utils import get_soup
 
 url_root = "https://www.baseball-reference.com/"
 
@@ -62,6 +62,3 @@ def extract_teams_from_division_table(table: BeautifulSoup) -> List[str]:
         teams.append(team)
 
     return teams
-
-s = extract_divisions(2014)
-print(s)

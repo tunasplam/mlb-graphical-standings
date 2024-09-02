@@ -1,1 +1,1 @@
-import utils
+from .graphical_standings import extract_divisions
