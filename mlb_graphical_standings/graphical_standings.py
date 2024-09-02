@@ -49,7 +49,6 @@ def determine_division(table: BeautifulSoup) -> str:
     link = table.tbody.find_all('th')[0].a['href']
     url = url_root + link
     soup = get_soup(url)
-
     t = soup.find('a', href=re.compile(r"/leagues/[A-Z]{2}/\d{4}.shtml")).text
 
     return t
