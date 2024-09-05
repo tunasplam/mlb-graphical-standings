@@ -1,3 +1,8 @@
+# TODO what if its not baseball season?
+
+# TODO configure place for config file
+
+from os import environ
 from typing import List
 import re
 import warnings
@@ -5,7 +10,9 @@ import warnings
 warnings.simplefilter(action='ignore', category=FutureWarning)
 
 from bs4 import BeautifulSoup
+from dotenv import load_dotenv
 import matplotlib.pyplot as plt
+import mailtrap as mt
 import numpy as np
 import pybaseball as pb
 from tqdm import tqdm
@@ -14,12 +21,26 @@ from tqdm import tqdm
 from utils import get_soup, block_print, enable_print, COLORS_CACHE
 
 URL_ROOT = "https://www.baseball-reference.com/"
+load_dotenv('/home/jordan/mlb-graphical-standings/.env')
+
+def send_email():
+    # create mail object
+    # TODO just throw everything into some html and send
+    mail = mt.Mail(
+        sender=mt.Address(email=environ['FROM_EMAIL'], name="MLB Standings Bot"),
+        to=[mt.Address(email=environ['TARGET_EMAIL'])],
+        subject="MLB GRAPHICAL STANDINGS",
+        text="Test email."
+    )
+
+    client = mt.MailtrapClient(token=environ['MAILTRAP_API_TOKEN'])
+    client.send(mail)
 
 def create_charts(season: int):
     """Create charts for each division in a given season. Saves them
     as pngs. Returns list of filepaths to these pngs.
     """
-
+    # TODO swap back when building
     #divisions = extract_divisions(season)
     divisions = {
         'AL_East': ['BAL', 'NYY', 'TOR', 'TBR', 'BOS'],
@@ -107,7 +128,6 @@ def extract_divisions(season: int) -> dict:
         dict: key is division and value list is abbreviations
             of teams in that division for the requested season
     """
-
     url = f"{URL_ROOT}leagues/majors/{season}-standings.shtml"
     soup = get_soup(url)
 
@@ -141,7 +161,8 @@ def determine_division(table: BeautifulSoup) -> str:
     return t
 
 def extract_teams_from_division_table(table: BeautifulSoup) -> List[str]:
-
+    """Extract list of BRef abbreviated team names from divisions table.
+    """
     teams = []
     ths = table.tbody.find_all('th')
     for th in ths:
@@ -150,4 +171,8 @@ def extract_teams_from_division_table(table: BeautifulSoup) -> List[str]:
 
     return teams
 
-create_charts(2014)
+
+# TODO ditch when building
+# create_charts(2014)
+
+send_email()

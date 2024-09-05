@@ -1,5 +1,16 @@
 # MLB-GRAPHICAL-STANDINGS
 
+## Setup
+
+[Use mailtrap.](https://api-docs.mailtrap.io/)
+
+Put 'Domain Admin' token as `MAILTRAP_API_TOKEN`.
+
+Set `TARGET_EMAIL` in `.env` file to be the email address you want to email these standings to.
+
+Set `FROM_EMAIL` in `.env` to be the email address you want to send from.
+We only want to send emails to ourself so just use `demomailtrap.com`. Otherwise, provide your own email in the `mailtrap.io` web ui.
+
 ## Usage
 
 Build
@@ -24,9 +35,11 @@ What this will use
 
 Roadmap
 
-O setup basic grpahical standings
+X setup basic grpahical standings
 
-O fix clashing colors
+X fix clashing colors
+
+O Make into an email
 
 O would be really cool if we had chatgpt generate humorous captions
 

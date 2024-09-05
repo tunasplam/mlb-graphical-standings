@@ -830,6 +830,20 @@ htmlsoup = ["BeautifulSoup4"]
 source = ["Cython (>=3.0.11)"]
 
 [[package]]
+name = "mailtrap"
+version = "2.0.1"
+description = "Official mailtrap.io API client"
+optional = false
+python-versions = ">=3.6"
+files = [
+    {file = "mailtrap-2.0.1-py3-none-any.whl", hash = "sha256:d03d6a9ca8ea9869acf75503028cbc993d77e0c1dbe6f66fdf12b23f5c5f9dc3"},
+    {file = "mailtrap-2.0.1.tar.gz", hash = "sha256:c043f06c46abebdb8e71547d04c228b9a3ac51172b91ff584374e0f9c01bf5f0"},
+]
+
+[package.dependencies]
+requests = ">=2.26.0"
+
+[[package]]
 name = "matplotlib"
 version = "3.9.2"
 description = "Python plotting package"
@@ -1405,6 +1419,20 @@ files = [
 six = ">=1.5"
 
 [[package]]
+name = "python-dotenv"
+version = "1.0.1"
+description = "Read key-value pairs from a .env file and set them as environment variables"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "python-dotenv-1.0.1.tar.gz", hash = "sha256:e324ee90a023d808f1959c46bcbc04446a10ced277783dc6ee09987c37ec10ca"},
+    {file = "python_dotenv-1.0.1-py3-none-any.whl", hash = "sha256:f7b63ef50f1b690dddf550d03497b66d609393b40b564ed0d674909a68ebf16a"},
+]
+
+[package.extras]
+cli = ["click (>=5.0)"]
+
+[[package]]
 name = "pytz"
 version = "2024.1"
 description = "World timezone definitions, modern and historical"
@@ -1671,4 +1699,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "5a672643170386013662835c9e9fc71c44c9d65244a6e2c7b7c7157b06933dac"
+content-hash = "22d69a288c22369c1d616699ec2919ec698325d1f5aad1b442d1bf3a72e42ca0"

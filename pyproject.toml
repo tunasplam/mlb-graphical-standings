@@ -13,6 +13,8 @@ pybaseball = "^2.2.7"
 tqdm = "^4.66.5"
 chuy = "^1.4.0"
 pylint = "^3.2.7"
+mailtrap = "^2.0.1"
+python-dotenv = "^1.0.1"
 
 [tool.chuy]
 build = "poetry build && && echo 'installing...' && poetry run pip install -q dist/mlb_graphical_standings-1.0.0-py3-none-any.whl --force-reinstall"
