@@ -2,32 +2,49 @@
 This creates and sends the email.
 """
 
+import base64
 from datetime import datetime
-from os import environ
-import re
-
 from dotenv import load_dotenv
+from os import environ
+from pathlib import Path
+import re
+from typing import List
+
 import mailtrap as mt
 
 # TODO configure place for config file
+# WAIT, NO, THIS IS JUST GOING INO DOCKER
 load_dotenv('/home/jordan/mlb-graphical-standings/.env')
 
 def send_email(divisions: dict):
 
-    html = format_html(divisions)
-
-    # create mail object
-    # TODO send the custom html content
-    mail = mt.Mail(
-        sender=mt.Address(email=environ['FROM_EMAIL'], name="MLB Standings Bot"),
-        to=[mt.Address(email=environ['TARGET_EMAIL'])],
-        subject="MLB GRAPHICAL STANDINGS",
-        text="Test email."
+    client = mt.MailtrapClient(token=environ['MAILTRAP_API_TOKEN'])
+    client.send(
+        mt.Mail(
+            sender=mt.Address(email=environ['FROM_EMAIL'], name="MLB Standings Bot"),
+            to=[mt.Address(email=environ['TARGET_EMAIL'])],
+            subject="MLB GRAPHICAL STANDINGS",
+            html=format_html(divisions),
+            attachments=prep_attachments(divisions)
+        ),
     )
 
-    client = mt.MailtrapClient(token=environ['MAILTRAP_API_TOKEN'])
-    client.send(mail)
+def prep_attachments(divisions: dict) -> List[mt.Attachment]:
+    ats = []
+    for division in divisions:
+        division_img = Path(__file__).parent.joinpath(f"{division}.png").read_bytes()
+        ats.append(
+            mt.Attachment(
+                # SMTH LIKE THIS
+                content=base64.b64encode(division_img),
+                filename=f"{division}.png",
+                disposition=mt.Disposition.INLINE,
+                mimetype="image/png",
+                content_id=f"{division}.png"
+            )
+        )
 
+    return ats
 
 def format_html(divisions: dict) -> str:
     """Takes info regarding divisions and formats the email HTML content.
@@ -47,12 +64,11 @@ def format_html(divisions: dict) -> str:
             <p>Have fun</p>"""
 
     for division in divisions:
-        caption = 'Insert caption text here.'
         html += f"""
             <h1 style="font-size: 18px; font-weight: bold; margin-top: 20px">{re.sub(r'_', r' ', division)}</h1>
-            <p>{caption}</p>
-            <img alt="Cool Graph" src="{division}.png" style="width: 100%;">"""
-        
+            <img alt="Cool Graph" src="cid:{division}.png" style="width: 100%;">
+            <p>{divisions[division]['caption']}</p>"""
+
     html += """
         </div>
         <style>
@@ -64,12 +80,3 @@ def format_html(divisions: dict) -> str:
     print(html)
 
     return html
-
-format_html({
-        'AL_East': ['BAL', 'NYY', 'TOR', 'TBR', 'BOS'],
-        'AL_Central': ['DET', 'KCR', 'CLE', 'CHW', 'MIN'],
-        'AL_West': ['LAA', 'OAK', 'SEA', 'HOU', 'TEX'],
-        'NL_East': ['WSN', 'ATL', 'NYM', 'MIA', 'PHI'],
-        'NL_Central': ['STL', 'PIT', 'MIL', 'CIN', 'CHC'],
-        'NL_West': ['LAD', 'SFG', 'SDP', 'COL', 'ARI']
-    })

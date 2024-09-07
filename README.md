@@ -11,6 +11,13 @@ Set `TARGET_EMAIL` in `.env` file to be the email address you want to email thes
 Set `FROM_EMAIL` in `.env` to be the email address you want to send from.
 We only want to send emails to ourself so just use `demomailtrap.com`. Otherwise, provide your own email in the `mailtrap.io` web ui.
 
+Captions are generated using GPT model from openai. Create a new project there and generate an API key for it.
+
+Pay $5 to set up a free paid account. Set monthly budget to $5.
+
+Cost per run: entirely negligible.
+
+
 ## Usage
 
 Build
@@ -41,9 +48,7 @@ X fix clashing colors
 
 O Make into an email
 
-O would be really cool if we had chatgpt generate humorous captions
-
-O add pngs of team logos
+X would be really cool if we had chatgpt generate humorous captions
 
 O test coverage
 
