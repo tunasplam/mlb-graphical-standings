@@ -1,5 +1,7 @@
 # MLB-GRAPHICAL-STANDINGS
 
+# When it is not baseball season then this should email us some fairly hilarious content about it not being baseball season.
+
 ## Setup
 
 [Use mailtrap.](https://api-docs.mailtrap.io/)
@@ -46,7 +48,7 @@ X setup basic grpahical standings
 
 X fix clashing colors
 
-O Make into an email
+X Make into an email
 
 X would be really cool if we had chatgpt generate humorous captions
 

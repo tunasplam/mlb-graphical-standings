@@ -1,19 +1,32 @@
-# TODO what if its not baseball season?
+# TODO what if its not baseball season? See README
 
-# TODO extensive code clean ups once this is all working
+# TODO clean up images somehow. put them into tmp when in docker?
 
-# TODO clean up images somehow. in fact all filepaths for everything
-# needs to be done better.
-
+import argparse
 
 # TODO put dot back when building
 from chart_creation import create_charts
 from email_formatter import send_email
 
-# TODO argparse stuff will go here
 def main():
-    divisions = create_charts(2024)
-    send_email(divisions)
+    parser = argparse.ArgumentParser(
+        prog='graphical_standings',
+        description='sends you emails of mlb graphics.'
+    )
 
-# TODO ditch when building
-main()
+    parser.add_argument(
+        '-s','--season',
+        action='store', type=int, nargs=1
+    )
+
+    args = parser.parse_args()
+
+    match args.season:
+        case None:
+            parser.print_help()
+            exit(1)
+        case _:
+            send_email(create_charts(args.season[0]))
+
+if __name__ == '__main__':
+    main()
