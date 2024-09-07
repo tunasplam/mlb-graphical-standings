@@ -13,7 +13,6 @@ from typing import List
 import mailtrap as mt
 
 # TODO configure place for config file
-# WAIT, NO, THIS IS JUST GOING INO DOCKER
 load_dotenv('/home/jordan/mlb-graphical-standings/.env')
 
 def send_email(divisions: dict):

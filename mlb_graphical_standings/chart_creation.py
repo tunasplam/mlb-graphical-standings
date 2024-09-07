@@ -78,10 +78,6 @@ def create_chart(season: int, division: str, teams: List[str]) -> str:
         else:
             ax.plot(team_df['GB'], label=team)
 
-        # TODO setting team logo shields at the end would be cool
-        # shield = plt.imread(f"../resources/{team}.png")
-        # ax.figure.figimage(shield, team_df.loc[num_games, 'GB'], num_games)
-    
     enable_print()
 
     plt.title(re.sub('_', ' ', division))
