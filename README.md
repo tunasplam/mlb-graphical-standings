@@ -10,6 +10,8 @@ This project uses Mailtrap to send the emails. You can use their smtp servers to
 
 [Get an API token somewhere here](https://api-docs.mailtrap.io/)
 
+Create a `.env` in `~/.config/mlb-grpahical-standings` using `.env.sample`
+
 Put 'Domain Admin' token as `MAILTRAP_API_TOKEN`.
 
 Set `TARGET_EMAIL` in `.env` file to be your email address that you used to sign up for Mailtrap.
@@ -40,8 +42,16 @@ options:
 ```
 
 ### RaspberryPi
-You can run this whereever you'd like, but I opted to do so on a Raspberry Pi.
+You can run this whereever you'd like, but I opted to do so on a Raspberry Pi. There are a few steps.
 
+Make sure ssl is installed on the system. Make sure you have python3.11 installed. In my case, I was using an old Raspberry Pi, so I installed 3.11 from source.
+
+In the cloned git repo:
+```
+python3.11 -m pip install poetry
+python3.11 -m poetry shell
+poetry install
+```
 
 ## Developing
 

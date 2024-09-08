@@ -1,11 +1,7 @@
 """Anything regarding using GPT to generate captions is done here.
 """
-from dotenv import load_dotenv
 from openai import OpenAI
 import pandas as pd
-
-# TODO configure place for config file
-load_dotenv('/home/jordan/mlb-graphical-standings/.env')
 
 client = OpenAI()
 

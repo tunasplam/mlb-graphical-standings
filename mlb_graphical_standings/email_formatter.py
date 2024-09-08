@@ -4,16 +4,12 @@ This creates and sends the email.
 
 import base64
 from datetime import datetime
-from dotenv import load_dotenv
 from os import environ
 from pathlib import Path
 import re
 from typing import List
 
 import mailtrap as mt
-
-# TODO configure place for config file
-load_dotenv('/home/jordan/mlb-graphical-standings/.env')
 
 def send_email(divisions: dict):
 
@@ -34,7 +30,6 @@ def prep_attachments(divisions: dict) -> List[mt.Attachment]:
         division_img = Path(__file__).parent.joinpath(f"{division}.png").read_bytes()
         ats.append(
             mt.Attachment(
-                # SMTH LIKE THIS
                 content=base64.b64encode(division_img),
                 filename=f"{division}.png",
                 disposition=mt.Disposition.INLINE,
