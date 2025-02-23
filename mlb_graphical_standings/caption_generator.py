@@ -30,3 +30,20 @@ def generate_caption(df: pd.DataFrame, prompt: str) -> str:
     )
 
     return response.choices[0].message.content
+
+def generate_offseason_content() -> str:
+    response = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[
+            {
+                "role": "system",
+                "content": "It is the baseball offseason and you are a bored reddit baseball fan creating content regarding baseball."
+            },
+            {
+                "role": "user",
+                "content": "It is the baseball offseason. Life is mundane and colorless. Please generate some fairly hilarious offseason content (make it \"peak\" content).)"
+            }
+        ]
+    )
+
+    return response.choices[0].message.content

@@ -10,6 +10,17 @@ from typing import List
 
 import mailtrap as mt
 
+def send_offseason_email(content: str):
+    client = mt.MailtrapClient(token=environ['MAILTRAP_API_TOKEN'])
+    client.send(
+        mt.Mail(
+            sender=mt.Address(email=environ['FROM_EMAIL'], name="MLB Standings Bot"),
+            to=[mt.Address(email=environ['TARGET_EMAIL'])],
+            subject="MLB GRAPHICAL STANDINGS",
+            text=content
+        )
+    )
+
 def send_email(content: dict):
     client = mt.MailtrapClient(token=environ['MAILTRAP_API_TOKEN'])
     client.send(

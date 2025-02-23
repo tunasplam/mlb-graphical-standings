@@ -1,8 +1,9 @@
 import argparse
 from datetime import datetime
 
+from .caption_generator import generate_offseason_content
 from .content_creation import create_content
-from .email_formatter import send_email
+from .email_formatter import send_email, send_offseason_email
 
 def main():
     parser = argparse.ArgumentParser(
@@ -13,7 +14,7 @@ def main():
     parser.add_argument(
         '-s','--season',
         action='store', type=int, nargs=1,
-        default=datetime.now().year,
+        default=[datetime.now().year],
         help="Which season to choose. Defaults to current."
     )
 
@@ -25,19 +26,22 @@ def main():
 
     args = parser.parse_args()
 
-    match args.season:
-        case None:
-            parser.print_help()
-            exit(1)
-        case _:
-            if args.prompt is None:
-                prompt = "Attached is information regarding the games behind of each team in an MLB division. Generate a caption that will be attached to lineplots displaying the trend of the games behind as time passes. Be completely whacko. Go crazy and have fun. Babble like a madman from the cartoon Adventure Time."
-            else:
-                with open(args.prompt, 'r', encoding='utf-8') as f:
-                    prompt = f.read()
+    if args.season is None:
+        parser.print_help()
+        exit(1)
 
-            content = create_content(args.season[0], prompt)
-            send_email(content)
+    if args.prompt is None:
+        prompt = "Attached is information regarding the games behind of each team in an MLB division. Generate a caption that will be attached to lineplots displaying the trend of the games behind as time passes. Be completely whacko. Go crazy and have fun. Babble like a madman from the cartoon Adventure Time."
+    else:
+        with open(args.prompt, 'r', encoding='utf-8') as f:
+            prompt = f.read()
+
+    content = create_content(args.season[0], prompt)
+    # if dict is empty, just assume that its the offseason.
+    if not content:
+        send_offseason_email(generate_offseason_content())
+
+    send_email(content)
 
 if __name__ == '__main__':
     main()
