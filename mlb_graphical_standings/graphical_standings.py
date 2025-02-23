@@ -1,19 +1,8 @@
-# TODO what if its not baseball season? See README
-
-# TODO clean up images somehow. put them into tmp when in rpi?
-
 import argparse
-from dotenv import load_dotenv
-from os import environ
-from pathlib import Path
+from datetime import datetime
 
-# check if config file exists and load
-status = load_dotenv(Path(environ['HOME']) / Path('.config/mlb-graphical-standings/.env'))
-if not status:
-    raise RuntimeException('No config file found. Make sure you have a .env file in ~/.config/mlb-graphical-standings. Check the README!')
-
-from chart_creation import create_charts
-from email_formatter import send_email
+from .content_creation import create_content
+from .email_formatter import send_email
 
 def main():
     parser = argparse.ArgumentParser(
@@ -23,7 +12,15 @@ def main():
 
     parser.add_argument(
         '-s','--season',
-        action='store', type=int, nargs=1
+        action='store', type=int, nargs=1,
+        default=datetime.now().year,
+        help="Which season to choose. Defaults to current."
+    )
+
+    parser.add_argument(
+        '-p', '--prompt',
+        action='store', type=str, nargs=1,
+        help="Path to prompt to use for ChatGPT-generated captions."
     )
 
     args = parser.parse_args()
@@ -33,7 +30,14 @@ def main():
             parser.print_help()
             exit(1)
         case _:
-            send_email(create_charts(args.season[0]))
+            if args.prompt is None:
+                prompt = "Attached is information regarding the games behind of each team in an MLB division. Generate a caption that will be attached to lineplots displaying the trend of the games behind as time passes. Be completely whacko. Go crazy and have fun. Babble like a madman from the cartoon Adventure Time."
+            else:
+                with open(args.prompt, 'r', encoding='utf-8') as f:
+                    prompt = f.read()
+
+            content = create_content(args.season[0], prompt)
+            send_email(content)
 
 if __name__ == '__main__':
     main()
