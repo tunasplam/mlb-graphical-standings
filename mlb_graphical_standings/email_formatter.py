@@ -5,43 +5,37 @@ This creates and sends the email.
 import base64
 from datetime import datetime
 from os import environ
-from pathlib import Path
 import re
 from typing import List
 
 import mailtrap as mt
 
-def send_email(divisions: dict):
-
+def send_email(content: dict):
     client = mt.MailtrapClient(token=environ['MAILTRAP_API_TOKEN'])
     client.send(
         mt.Mail(
             sender=mt.Address(email=environ['FROM_EMAIL'], name="MLB Standings Bot"),
             to=[mt.Address(email=environ['TARGET_EMAIL'])],
             subject="MLB GRAPHICAL STANDINGS",
-            html=format_html(divisions),
-            attachments=prep_attachments(divisions)
-        ),
+            html=format_html(content),
+            attachments=prep_attachments(content)
+        )
     )
 
-def prep_attachments(divisions: dict) -> List[mt.Attachment]:
-    ats = []
-    for division in divisions:
-        division_img = Path(__file__).parent.joinpath(f"{division}.png").read_bytes()
-        ats.append(
-            mt.Attachment(
-                content=base64.b64encode(division_img),
-                filename=f"{division}.png",
-                disposition=mt.Disposition.INLINE,
-                mimetype="image/png",
-                content_id=f"{division}.png"
-            )
-        )
+def prep_attachments(content: dict) -> List[mt.Attachment]:
+    return [
+        mt.Attachment(
+            content=base64.b64encode(sd['image'].getvalue()),
+            filename=f"{division}.png",
+            disposition=mt.Disposition.INLINE,
+            mimetype="image/png",
+            content_id=f"{division}.png"
+        ) for division, sd in content.items()
+    ]
 
-    return ats
-
-def format_html(divisions: dict) -> str:
+def format_html(content: dict) -> str:
     """Takes info regarding divisions and formats the email HTML content.
+    TODO maybe jinja this
     """
 
     date = datetime.strftime(datetime.now(), "%A %B %d, %Y")
@@ -57,11 +51,11 @@ def format_html(divisions: dict) -> str:
             <h1 style="font-size: 18px; font-weight: bold; margin-top: 20px">MLB Graphical Standings {date}</h1>
             <p>Have fun</p>"""
 
-    for division in divisions:
+    for division in content:
         html += f"""
             <h1 style="font-size: 18px; font-weight: bold; margin-top: 20px">{re.sub(r'_', r' ', division)}</h1>
             <img alt="Cool Graph" src="cid:{division}.png" style="width: 100%;">
-            <p>{divisions[division]['caption']}</p>"""
+            <p>{content[division]['caption']}</p>"""
 
     html += """
         </div>
@@ -70,7 +64,5 @@ def format_html(divisions: dict) -> str:
             a:hover { border-left-width: 1em; min-height: 2em; }
         </style>
         </body>"""
-
-    print(html)
 
     return html
