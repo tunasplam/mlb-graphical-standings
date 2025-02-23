@@ -1,7 +1,5 @@
 # MLB-GRAPHICAL-STANDINGS
 
-# When it is not baseball season then this should email us some fairly hilarious content about it not being baseball season.
-
 ## Setup
 
 ### Mailtrap account
@@ -10,14 +8,14 @@ This project uses Mailtrap to send the emails. You can use their smtp servers to
 
 [Get an API token somewhere here](https://api-docs.mailtrap.io/)
 
-Create a `.env` in `~/.config/mlb-grpahical-standings` using `.env.sample`
+Create a `.env` in `~/.config/mlb-graphical-standings` using `.env.sample`
 
 Put 'Domain Admin' token as `MAILTRAP_API_TOKEN`.
 
 Set `TARGET_EMAIL` in `.env` file to be your email address that you used to sign up for Mailtrap.
 
 Set `FROM_EMAIL` in `.env` to be the email address you want to send from.
-We only want to send emails to ourself so just use `demomailtrap.com`. Otherwise, provide your own email in the `mailtrap.io` web ui.
+We only want to send emails to ourself so just use `demo@demomailtrap.com`. Otherwise, provide your own email in the `mailtrap.io` web ui.
 
 ### OpenAI account
 
@@ -32,26 +30,24 @@ Cost per run: entirely negligible.
 ### Usage
 
 ```
-usage: graphical_standings [-h] [-s SEASON]
+usage: graphical_standings [-h] [-s SEASON] [-p PROMPT]
 
 sends you emails of mlb graphics.
 
 options:
   -h, --help            show this help message and exit
   -s SEASON, --season SEASON
+                        Which season to choose. Defaults to current. Older seasons may not work.
+  -p PROMPT, --prompt PROMPT
+                        Path to prompt to use for ChatGPT-generated captions.
 ```
 
-### RaspberryPi
-You can run this whereever you'd like, but I opted to do so on a Raspberry Pi. There are a few steps.
+Here is the default prompt:
 
-Make sure ssl is installed on the system. Make sure you have python3.11 installed. In my case, I was using an old Raspberry Pi, so I installed 3.11 from source.
+    Attached is information regarding the games behind of each team in an MLB division.Generate a caption that will be attached to lineplots displaying the trend of the games behind as time passes. Be completely whacko. Go crazy and have fun. Babble like a madman from the cartoon Adventure Time.
 
-In the cloned git repo:
-```
-python3.11 -m pip install poetry
-python3.11 -m poetry shell
-poetry install
-```
+If you don't like it, then you can change it by specifying the path to a .txt
+file containing the desired prompt. I recommend putting it in `~/.config/mlb-graphical-standings/prompt.txt`. You can even have multiple prompts and have some script choose one at random. Just have fun with it.
 
 ## Developing
 
@@ -79,14 +75,6 @@ X Make into an email
 
 X would be really cool if we had chatgpt generate humorous captions
 
-Next:
-    O clone this repo onto a Raspberry Pi
-    O install poetry
-    O configure everything to run
-    O hook this up to cron
-Document the entire installation procedure.
-
 O test coverage
 
-O get logging setup
-
+O When it is not baseball season it should send us fairly hilarious content about it not being baseball season.
