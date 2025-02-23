@@ -35,7 +35,6 @@ def prep_attachments(content: dict) -> List[mt.Attachment]:
 
 def format_html(content: dict) -> str:
     """Takes info regarding divisions and formats the email HTML content.
-    TODO maybe jinja this
     """
 
     date = datetime.strftime(datetime.now(), "%A %B %d, %Y")
