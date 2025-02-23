@@ -3,11 +3,10 @@ Everything regarding the creation of the charts goes here.
 So pulling the data and creating and saving the charts.
 """
 
+from io import BytesIO
 from typing import List
 import re
 import warnings
-
-warnings.simplefilter(action='ignore', category=FutureWarning)
 
 from bs4 import BeautifulSoup
 import matplotlib.pyplot as plt
@@ -16,82 +15,67 @@ import pandas as pd
 import pybaseball as pb
 from tqdm import tqdm
 
-from caption_generator import generate_caption
-from utils import get_soup, block_print, enable_print, COLORS_CACHE
+from .caption_generator import generate_caption
+from .utils import get_soup, block_print, enable_print, COLORS_CACHE
+
+warnings.simplefilter(action='ignore', category=FutureWarning)
 
 URL_ROOT = "https://www.baseball-reference.com/"
 
-def create_charts(season: int):
+def create_content(season: int, prompt: str) -> dict:
     """Create charts for each division in a given season. Saves them
-    as pngs. Returns divisions dict. Keys are the names of the .pngs
-    where the images are stored
+    in memory. Then returns all of the info in dicts
+
+    Returns (dict, dict): First dict is images stored in memory.
+    Second is info on the division.
     """
     divisions = extract_divisions(season)
 
-    for division in divisions:
-        divisions[division]['caption'] = create_chart(
-            season, division, divisions[division]['teams']
-        )
+    for division, sd in divisions.items():
+        print(division)
+        division_gbs = calculate_division_gb(season, sd['teams'])
+        sd['image'] = create_chart(division, sd['teams'], division_gbs)
+        sd['caption'] = generate_caption(division_gbs, prompt)
 
     return divisions
 
-def create_chart(season: int, division: str, teams: List[str]) -> str:
-    """Create standings chart for given season/division. Saves the chart
-    to disk and returns the filepath.
-
-    Returns the caption because why not. This is a hobby project, its
-    not supposed to make total sense.
-
-    Args:
-        season (int): year of desired season
-        division (str): division to generate standings for
-        teams (List[str]): list of teams from that division
-
-    Returns:
-        str: caption text
-    """
-    ax = plt.axes()
-    ax.figure.figsize = (8,6)
-
-    print(f"Getting schedule and records for {division}")
-    num_games = 0
-
-    # this is a df for all the data on GBs in the division for ChatGPT
+def calculate_division_gb(season: int, teams: List[str]) -> pd.DataFrame:
     division_gbs = pd.DataFrame()
 
     block_print()
     for team in tqdm(teams):
         team_df = pb.schedule_and_record(season, team)
-
-        # set how many games have been played so that xticks can adapt
-        if num_games == 0:
-            num_games = len(team_df.index)
-
         team_df['GB'] = team_df['GB'].dropna().apply(modify_gb)
-
         division_gbs[team] = team_df['GB']
 
+    enable_print()
+    return division_gbs
+
+def create_chart(division: str, teams: List[str], division_gbs: pd.DataFrame) -> BytesIO:
+    ax = plt.axes()
+    ax.figure.figsize = (8,6)
+
+    for team in teams:
         # If we have a color for this team cached, then use it
         # otherwise have plt autoassign.
         if team in COLORS_CACHE:
-            ax.plot(team_df['GB'], label=team, c=COLORS_CACHE[team])
+            ax.plot(division_gbs[team], label=team, c=COLORS_CACHE[team])
         else:
-            ax.plot(team_df['GB'], label=team)
-
-    enable_print()
+            ax.plot(division_gbs[team], label=team)
 
     plt.title(re.sub('_', ' ', division))
-    plt.xticks(np.arange(0, num_games, step=20))
+    plt.xticks(np.arange(0, len(division_gbs.index), step=20))
     plt.yticks(np.arange(0, -30, step=-5))
     plt.xlabel('Games')
     plt.ylabel('Games Back')
     plt.legend(loc='lower left')
 
-    # TODO better filepath handling
-    fname = f'{division}.png'
-    plt.savefig(fname)
-    plt.clf()
-    return generate_caption(division_gbs)
+    # save to RAM and return the image
+    img_bytes = BytesIO()
+    plt.savefig(img_bytes, format="png")
+    img_bytes.seek(0)
+    plt.close()
+    return img_bytes
 
 def modify_gb(gb: str) -> float:
     """Converts GB column from human-readable text to usable floats.
@@ -123,8 +107,7 @@ def extract_divisions(season: int) -> dict:
     tables = soup.find_all('table', id=re.compile(r"standings_[A-Z]"))
 
     divisions = {}
-    print("Extracting divisions from BRef")
-    for t in tqdm(tables):
+    for t in tables:
         division = determine_division(t)
         divisions[division] = {}
         divisions[division]['teams'] = extract_teams_from_division_table(t)
