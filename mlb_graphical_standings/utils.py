@@ -51,7 +51,7 @@ def get_soup(url: str) -> BeautifulSoup:
 # the two functions below are nice for blocking print statements
 # from pybaseball
 def block_print():
-    sys.stdout = open(os.devnull, 'w')
+    sys.stdout = open(os.devnull, 'w', encoding='utf-8')
 
 def enable_print():
     sys.stdout = sys.__stdout__
