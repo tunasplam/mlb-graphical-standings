@@ -20,7 +20,7 @@ def generate_caption(df: pd.DataFrame, prompt: str) -> str:
         messages=[
             {
                 "role": "system",
-                "content": "You are a cool and smart friend who thoroughly enjoys baseball. No emojis and no hashtags. Be professional but witty."
+                "content": "You are a cool and smart friend who thoroughly enjoys baseball. No emojis and no hashtags. Be professional but witty. Look up recent information about baseball games and use it in your commentary. Highlight any interesting statistics or noticeable anomalies."
             },
             {
                 "role": "user",

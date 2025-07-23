@@ -25,9 +25,11 @@ Set `OPENAI_API_KEY` in `.env` to be your OpenAI Project API key dedicated to th
 
 Pay $5 to set up a free paid account. Set monthly budget to $5.
 
-Cost per run: entirely negligible.
+Cost per run: should be negligible.
 
 ### Usage
+
+`python -m mlb_graphical_standings.graphical_standings`
 
 ```
 usage: graphical_standings [-h] [-s SEASON] [-p PROMPT]
@@ -46,8 +48,7 @@ Here is the default prompt:
 
     Attached is information regarding the games behind of each team in an MLB division.Generate a caption that will be attached to lineplots displaying the trend of the games behind as time passes. Be completely whacko. Go crazy and have fun. Babble like a madman from the cartoon Adventure Time.
 
-If you don't like it, then you can change it by specifying the path to a .txt
-file containing the desired prompt. I recommend putting it in `~/.config/mlb-graphical-standings/prompt.txt`. You can even have multiple prompts and have some script choose one at random. Just have fun with it.
+If you don't like it, then you can change it by specifying the path to a .txt file containing the desired prompt. I recommend putting it in `~/.config/mlb-graphical-standings/prompt.txt`. You can even have multiple prompts and have some script choose one at random. Just have fun with it.
 
 ## Developing
 
@@ -65,16 +66,8 @@ chuy build test
 
 This program grabs current division standings in the MLB and creates a report with a captioned lineplot representing the progression of the season to date. It then emails the report to a myself.
 
-Roadmap
+In `sample_files` you will find a basic shell script and some prompts that are selected based on the day of the week.
 
-X setup basic grpahical standings
+## TODO
 
-X fix clashing colors
-
-X Make into an email
-
-X would be really cool if we had chatgpt generate humorous captions
-
-O test coverage
-
-O When it is not baseball season it should send us fairly hilarious content about it not being baseball season.
+Some of the teams are mixed up in the standings... Also some player references are incorrect (for example, in 2025 ChatGPT is stating that Ohtani is on LAA and currently on the IL).

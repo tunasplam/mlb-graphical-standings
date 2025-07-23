@@ -2,6 +2,8 @@
 
 NOTE I expect that these tests will take several minutes because
 of BRef rate limiting.
+
+TODO these are totally wrong now.
 """
 
 import mlb_graphical_standings as m

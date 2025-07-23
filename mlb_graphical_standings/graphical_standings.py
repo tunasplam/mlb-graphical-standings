@@ -33,13 +33,15 @@ def main():
     if args.prompt is None:
         prompt = "Attached is information regarding the games behind of each team in an MLB division. Generate a caption that will be attached to lineplots displaying the trend of the games behind as time passes. Be completely whacko. Go crazy and have fun. Babble like a madman from the cartoon Adventure Time."
     else:
-        with open(args.prompt, 'r', encoding='utf-8') as f:
+        with open(args.prompt[0], 'r', encoding='utf-8') as f:
             prompt = f.read()
 
     content = create_content(args.season[0], prompt)
     # if dict is empty, just assume that its the offseason.
     if not content:
         send_offseason_email(generate_offseason_content())
+
+    print(content)
 
     send_email(content)
 
