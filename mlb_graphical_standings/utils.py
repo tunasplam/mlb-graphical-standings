@@ -19,7 +19,7 @@ COLORS_CACHE = {
     'CHW': '#27251F',  # Chicago White Sox
     'MIN': '#002B5C',  # Minnesota Twins
     'LAA': '#BA0021',  # Los Angeles Angels
-    'OAK': '#33cc33',  # Oakland Athletics
+    'ATH': '#33cc33',  # Oakland Athletics
     'SEA': '#005C5C',  # Seattle Mariners
     'HOU': '#EB6E1F',  # Houston Astros
     'TEX': '#003278',  # Texas Rangers
@@ -45,7 +45,7 @@ COLORS_CACHE = {
 session = BRefSession()
 
 def get_soup(url: str) -> BeautifulSoup:
-    s = session.get(url).content
+    s = session.get(url).content # type: ignore
     return BeautifulSoup(s, "lxml")
 
 # the two functions below are nice for blocking print statements
